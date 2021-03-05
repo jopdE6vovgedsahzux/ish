@@ -4,7 +4,7 @@ cd $MESON_BUILD_DIR
 
 config=$(meson introspect --buildoptions)
 if [[ $? -ne 0 ]]; then
-    export CC_FOR_BUILD="env -u SDKROOT -u IPHONEOS_DEPLOYMENT_TARGET clang"
+    export CC_FOR_BUILD="env -u SDKROOT -u IPHONEOS_DEPLOYMENT_TARGET xcrun clang"
     export CC="$CC_FOR_BUILD" # compatibility with meson < 0.54.0
     crossfile=cross.txt
     echo $ARCHS
@@ -38,16 +38,14 @@ buildtype=debug
 b_ndebug=false
 if [[ $CONFIGURATION == Release ]]; then
     buildtype=debugoptimized
-    b_ndebug=true
 fi
 b_sanitize=none
 if [[ -n "$ENABLE_ADDRESS_SANITIZER" ]]; then
     b_sanitize=address
 fi
 log=$ISH_LOG
-log_handler=nslog
-jit=true
-for var in buildtype log b_ndebug b_sanitize log_handler jit; do
+log_handler=$ISH_LOGGER
+for var in buildtype log b_ndebug b_sanitize log_handler; do
     old_value=$(python3 -c "import sys, json; v = next(x['value'] for x in json.load(sys.stdin) if x['name'] == '$var'); print(str(v).lower() if isinstance(v, bool) else v)" <<< $config)
     new_value=${!var}
     if [[ $old_value != $new_value ]]; then

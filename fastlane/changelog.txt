@@ -1,7 +1,9 @@
 New stuff:
-- Filesystems can be renamed
-- GDB works a little bit
+- Added some more icons
+- APK over on-demand resources (for App Store and TestFlight)
+- Can use fonts installed via profile on iOS 14
 
 Fixed bugs:
-- Dictation doesn't insert 10 useless spaces
-- Files that are copied out in the Files app and then deleted no longer take up space
+- `cd /proc/self/fd` not doing anything in busybox ash (thanks @nimelehin)
+- Crash when running `ps` many times in parallel (thanks @emkey1)
+- Titles missing in some settings pages

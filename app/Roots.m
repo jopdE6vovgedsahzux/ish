@@ -8,7 +8,8 @@
 #import <FileProvider/FileProvider.h>
 #import "Roots.h"
 #import "AppGroup.h"
-#include "fs/fakefsify.h"
+#import "NSObject+SaneKVO.h"
+#include "tools/fakefs.h"
 
 static NSURL *RootsDir() {
     static NSURL *rootsDir;
@@ -30,6 +31,7 @@ static NSString *kDefaultRoot = @"Default Root";
 @property NSMutableOrderedSet<NSString *> *roots;
 @property BOOL updatingDomains;
 @property BOOL domainsNeedUpdate;
+@property BOOL wantsVersionFile;
 @end
 
 @implementation Roots
@@ -41,34 +43,34 @@ static NSString *kDefaultRoot = @"Default Root";
         NSAssert(error == nil, @"couldn't list roots: %@", error);
         self.roots = [rootNames mutableCopy];
         if (!self.roots.count) {
-            // import alpine
+            // import default root
             NSError *error;
-            if (![self importRootFromArchive:[NSBundle.mainBundle URLForResource:@"alpine" withExtension:@"tar.gz"]
-                                        name:@"alpine"
+            if (![self importRootFromArchive:[NSBundle.mainBundle URLForResource:@"root" withExtension:@"tar.gz"]
+                                        name:@"default"
                                        error:&error
                             progressReporter:nil]) {
-                NSAssert(NO, @"failed to import alpine, error %@", error);
+                NSAssert(NO, @"failed to import default root, error %@", error);
             }
+            _wantsVersionFile = YES;
         }
-        [self addObserver:self forKeyPath:@"roots" options:0 context:nil];
+        [self observe:@[@"roots"] options:0 owner:self usingBlock:^(typeof(self) self) {
+            if (self.defaultRoot == nil && self.roots.count)
+                self.defaultRoot = self.roots[0];
+            [self syncFileProviderDomains];
+        }];
         [self syncFileProviderDomains];
 
-        self.defaultRoot = [NSUserDefaults.standardUserDefaults stringForKey:kDefaultRoot];
-        [self addObserver:self forKeyPath:@"defaultRoot" options:0 context:nil];
         if ((!self.defaultRoot || ![self.roots containsObject:self.defaultRoot]) && self.roots.count)
             self.defaultRoot = self.roots.firstObject;
     }
     return self;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"defaultRoot"]) {
-        [NSUserDefaults.standardUserDefaults setObject:self.defaultRoot forKey:kDefaultRoot];
-    } else if ([keyPath isEqualToString:@"roots"]) {
-        if (self.defaultRoot == nil && self.roots.count)
-            self.defaultRoot = self.roots[0];
-        [self syncFileProviderDomains];
-    }
+- (NSString *)defaultRoot {
+    return [NSUserDefaults.standardUserDefaults stringForKey:kDefaultRoot];
+}
+- (void)setDefaultRoot:(NSString *)defaultRoot {
+    [NSUserDefaults.standardUserDefaults setObject:defaultRoot forKey:kDefaultRoot];
 }
 
 - (NSURL *)rootUrl:(NSString *)name {
@@ -197,6 +199,14 @@ void root_progress_callback(void *cookie, double progress, const char *message, 
 - (BOOL)renameRoot:(NSString *)name toName:(NSString *)newName error:(NSError **)error {
     if (name.length == 0) {
         *error = [NSError errorWithDomain:@"iSH" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Filesystem name can't be empty"}];
+        return NO;
+    }
+    if ([name containsString:@"/"]) {
+        *error = [NSError errorWithDomain:@"iSH" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Filesystem name can't contain /"}];
+        return NO;
+    }
+    if ([name isEqualToString:@"."] || [name isEqualToString:@".."]) {
+        *error = [NSError errorWithDomain:@"iSH" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Filesystem name can't be . or .."}];
         return NO;
     }
     if ([name isEqualToString:self.defaultRoot]) {

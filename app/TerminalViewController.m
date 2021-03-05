@@ -12,6 +12,7 @@
 #import "ArrowBarButton.h"
 #import "UserPreferences.h"
 #import "AboutViewController.h"
+#import "NSObject+SaneKVO.h"
 #include "kernel/init.h"
 #include "kernel/task.h"
 #include "kernel/calls.h"
@@ -103,6 +104,11 @@
         [self.escapeKey setTitle:nil forState:UIControlStateNormal];
         [self.escapeKey setImage:[UIImage systemImageNamed:@"escape"] forState:UIControlStateNormal];
     }
+
+    [UserPreferences.shared observe:@[@"theme", @"hideExtraKeysWithExternalKeyboard"]
+                            options:0 owner:self usingBlock:^(typeof(self) self) {
+        [self _updateStyleFromPreferences:YES];
+    }];
 }
 
 - (void)awakeFromNib {
@@ -111,8 +117,11 @@
                                            selector:@selector(processExited:)
                                                name:ProcessExitedNotification
                                              object:nil];
-    [[UserPreferences shared] addObserver:self forKeyPath:@"theme" options:NSKeyValueObservingOptionNew context:nil];
-    [[UserPreferences shared] addObserver:self forKeyPath:@"hideExtraKeysWithExternalKeyboard" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [AppDelegate maybePresentStartupMessageOnViewController:self];
+    [super viewDidAppear:animated];
 }
 
 - (void)startNewSession {
@@ -183,6 +192,7 @@
             return;
         }
     }
+    current = NULL; // it's been freed
     [self startNewSession];
 }
 
@@ -194,10 +204,6 @@
                                                 handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
     });
-}
-
-- (void)dealloc {
-    [[UserPreferences shared] removeObserver:self forKeyPath:@"theme"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -233,6 +239,10 @@
         [self.termView reloadInputViews];
         self.ignoreKeyboardMotion = NO;
     }
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+- (void)_updateStyleAnimated {
+    [self _updateStyleFromPreferences:YES];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -261,7 +271,7 @@
         pad = self.view.safeAreaInsets.bottom;
     }
     // NSLog(@"pad %f", pad);
-    self.bottomConstraint.constant = -pad;
+    self.bottomConstraint.constant = pad;
 
     BOOL initialLayout = self.termView.needsUpdateConstraints;
     [self.view setNeedsUpdateConstraints];
@@ -297,6 +307,14 @@
     if ([UserPreferences.shared hasChangedLaunchCommand])
         [alert addAction:[UIAlertAction actionWithTitle:@"i typed the init command wrong, let me fix it" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"embed"]) {
+        // You might want to check if this is your embed segue here
+        // in case there are other segues triggered from this view controller.
+        segue.destinationViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
+    }
 }
 
 #pragma mark Bar

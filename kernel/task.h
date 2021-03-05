@@ -16,7 +16,7 @@
 // locking, unless otherwise specified
 struct task {
     struct cpu_state cpu;
-    struct mm *mm;
+    struct mm *mm; // locked by general_lock
     struct mem *mem; // copy of cpu.mem, for convenience
     pthread_t thread;
     uint64_t threadid;
@@ -30,7 +30,7 @@ struct task {
 #define MAX_GROUPS 32
     unsigned ngroups;
     uid_t_ groups[MAX_GROUPS];
-    char comm[16] __strncpy_safe;
+    char comm[16] __strncpy_safe; // locked by general_lock
     bool did_exec; // for that one annoying setsid edge case
 
     struct fdtable *files;
@@ -81,7 +81,7 @@ struct task {
     int exit_signal;
 
     // lock for anything that needs locking but is not covered by some other lock
-    // right now, just comm
+    // specifically: comm, mm
     lock_t general_lock;
 
     struct task_sockrestart sockrestart;
@@ -178,7 +178,7 @@ struct task *pid_get_task_zombie(dword_t id); // don't return null if the task e
 
 // TODO document
 void task_start(struct task *task);
-void task_run_current();
+void task_run_current(void);
 
 extern void (*exit_hook)(struct task *task, int code);
 

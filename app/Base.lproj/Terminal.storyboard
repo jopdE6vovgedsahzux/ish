@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_0" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,27 +13,34 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="TerminalViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FQi-r8-odu" customClass="TerminalView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <outlet property="controlKey" destination="W9v-cj-FWz" id="HgQ-u7-5IL"/>
                                     <outlet property="inputAccessoryView" destination="GyN-ob-WFz" id="rBB-FQ-HiM"/>
                                 </connections>
                             </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4UX-TH-4BQ" customClass="PassthroughView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <segue destination="hWN-qz-BEH" kind="embed" id="mcY-QX-RE9"/>
+                                </connections>
+                            </containerView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="IVs-Oh-AhK"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="FQi-r8-odu" firstAttribute="trailing" secondItem="IVs-Oh-AhK" secondAttribute="trailing" id="EeQ-tO-BY6"/>
-                            <constraint firstItem="FQi-r8-odu" firstAttribute="top" secondItem="IVs-Oh-AhK" secondAttribute="top" id="Fd5-I9-Qjs"/>
-                            <constraint firstItem="FQi-r8-odu" firstAttribute="leading" secondItem="IVs-Oh-AhK" secondAttribute="leading" id="VUM-Zu-VAQ"/>
-                            <constraint firstItem="FQi-r8-odu" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" identifier="bottom constraint" id="fXD-Y3-UQj"/>
+                            <constraint firstAttribute="bottom" secondItem="FQi-r8-odu" secondAttribute="bottom" id="TjH-PI-NBO"/>
+                            <constraint firstItem="FQi-r8-odu" firstAttribute="top" secondItem="IVs-Oh-AhK" secondAttribute="top" id="WI3-Ir-VlB"/>
+                            <constraint firstItem="FQi-r8-odu" firstAttribute="leading" secondItem="IVs-Oh-AhK" secondAttribute="leading" id="qb1-5r-6hA"/>
+                            <constraint firstItem="FQi-r8-odu" firstAttribute="trailing" secondItem="IVs-Oh-AhK" secondAttribute="trailing" id="rki-R2-KeY"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="IVs-Oh-AhK"/>
                     </view>
                     <connections>
                         <outlet property="bar" destination="4pc-Ei-ihz" id="iy4-s8-7yt"/>
@@ -43,7 +50,7 @@
                         <outlet property="barTop" destination="gtD-Rx-Gdo" id="zXm-Bb-ZyO"/>
                         <outlet property="barTrailing" destination="RAD-x5-aAI" id="Ele-Ty-xAK"/>
                         <outlet property="barView" destination="GyN-ob-WFz" id="lVV-s6-cQt"/>
-                        <outlet property="bottomConstraint" destination="fXD-Y3-UQj" id="dpH-0p-KEx"/>
+                        <outlet property="bottomConstraint" destination="TjH-PI-NBO" id="ZSq-o1-EC4"/>
                         <outlet property="controlKey" destination="W9v-cj-FWz" id="c9i-VC-j7f"/>
                         <outlet property="escapeKey" destination="IPm-l0-f25" id="QBn-lt-GPd"/>
                         <outlet property="hideKeyboardButton" destination="7qw-ie-p4d" id="n5f-XX-i98"/>
@@ -77,7 +84,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="⇥">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="titleColor" systemColor="darkTextColor"/>
                                     </state>
                                     <connections>
                                         <action selector="pressTab:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="Cbz-tT-Cre"/>
@@ -92,7 +99,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="⌃">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="titleColor" systemColor="darkTextColor"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="toggleable" value="YES"/>
@@ -110,7 +117,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="⎋">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="titleColor" systemColor="darkTextColor"/>
                                     </state>
                                     <connections>
                                         <action selector="pressEscape:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="Z7i-gl-kzw"/>
@@ -122,7 +129,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="titleColor" systemColor="darkTextColor"/>
                                     </state>
                                     <connections>
                                         <action selector="pressArrow:" destination="BYZ-38-t0r" eventType="valueChanged" id="SBI-0w-nSu"/>
@@ -139,14 +146,14 @@
                                     </constraints>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal">
-                                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="titleColor" systemColor="darkTextColor"/>
                                     </state>
                                     <connections>
                                         <action selector="showAbout:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="xbI-EN-avC"/>
                                         <outletCollection property="gestureRecognizers" destination="reB-As-gYu" appends="YES" id="ehk-hz-UIY"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hmm-tv-z35" userLabel="Paste">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hmm-tv-z35" userLabel="Paste">
                                     <rect key="frame" x="420" y="0.0" width="31" height="43"/>
                                     <accessibility key="accessibilityConfiguration" label="Paste"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -155,7 +162,7 @@
                                         <action selector="paste:" destination="dkx-z0-nzr" eventType="primaryActionTriggered" id="cfw-0C-OAd"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7qw-ie-p4d">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7qw-ie-p4d">
                                     <rect key="frame" x="457" y="0.0" width="31" height="43"/>
                                     <accessibility key="accessibilityConfiguration" label="Hide Keyboard"/>
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -175,14 +182,14 @@
                             </constraints>
                         </stackView>
                     </subviews>
-                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <viewLayoutGuide key="safeArea" id="hgN-L1-K1S"/>
+                    <color key="tintColor" systemColor="darkTextColor"/>
                     <constraints>
                         <constraint firstItem="4pc-Ei-ihz" firstAttribute="leading" secondItem="hgN-L1-K1S" secondAttribute="leading" constant="6" id="Ha9-7V-oYm"/>
                         <constraint firstAttribute="bottom" secondItem="4pc-Ei-ihz" secondAttribute="bottom" constant="6" id="OK7-xG-JFg"/>
                         <constraint firstItem="hgN-L1-K1S" firstAttribute="trailing" secondItem="4pc-Ei-ihz" secondAttribute="trailing" constant="6" id="RAD-x5-aAI"/>
                         <constraint firstItem="4pc-Ei-ihz" firstAttribute="top" secondItem="GyN-ob-WFz" secondAttribute="top" constant="6" id="gtD-Rx-Gdo"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="hgN-L1-K1S"/>
                     <connections>
                         <outlet property="terminalViewController" destination="BYZ-38-t0r" id="Pog-Oc-1za"/>
                     </connections>
@@ -193,11 +200,37 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="32.799999999999997" y="32.833583208395808"/>
+            <point key="canvasLocation" x="31.875" y="32.74647887323944"/>
+        </scene>
+        <!--APKDownloads-->
+        <scene sceneID="cCe-Da-UCg">
+            <objects>
+                <viewControllerPlaceholder storyboardName="APKDownloads" id="hWN-qz-BEH" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OiW-pN-fBS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="755" y="33"/>
         </scene>
     </scenes>
     <resources>
         <image name="Hide Keyboard" width="32" height="32"/>
         <image name="Paste" width="20" height="21"/>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
